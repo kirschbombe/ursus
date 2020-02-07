@@ -72,8 +72,14 @@ RSpec.describe ApplicationController, type: :controller do
       end
     end
 
-    context 'if ENV[\'SINAI_ID_BYPASS\' is true' do
-
+    context 'if ENV[\'SINAI_ID_BYPASS\'] is true' do
+      before do
+        allow(ENV).to receive(:[]).and_call_original
+        allow(ENV).to receive(:[]).with('SINAI_ID_BYPASS').and_return(true)
+      end
+      it 'returns true sinai_authn_check' do
+        expect(controller.sinai_authn_check).to be true
+      end
     end
 
     context 'if the \'sinai\' feature flag is off' do
