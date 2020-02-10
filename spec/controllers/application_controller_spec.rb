@@ -91,29 +91,22 @@ RSpec.describe ApplicationController, type: :controller do
       end
     end
 
-    # FIXME 'whitelisted' means ???? valid and not the login URL?
-    context 'if the requested path is whitelisted' do
+    context 'if the requested path is login_path' do
       before do
-      # craft a suitable URL to serve as the originally-requested URL
-
+        allow(controller).to receive(:request).and_return(instance_double('ActionDispatch::Request', path: controller.login_path))
       end
-      it 'redirects to login URL'
-      it 'remembers the originally-requested URL'
-      # FIXME, test criteria unclear
+      it 'allows Rails to continue' do
+        expect(controller.sinai_authn_check).to be true
+      end
     end
 
     context 'if we are already authenticated' do
       before do
-        # allow(controller).to receive(:request).and_return(instance_double('ActionDispatch::Request', path: '/requested_path'))
         allow(controller).to receive(:sinai_authenticated?).and_return(true)
       end
       it 'allows Rails to continue' do
-        # /requested_path???
-        controller.sinai_authn_check
         expect(controller.sinai_authn_check).to be true
       end
-
     end
-
   end
 end
